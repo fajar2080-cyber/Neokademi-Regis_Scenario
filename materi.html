@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ruang Kelas | Neokademi</title>
+    <title>NeoCourse - Materi Pembelajaran</title>
     
     <script>
         (function() {
@@ -64,7 +64,7 @@
     
     <div id="global-loader" class="fixed inset-0 bg-white/95 dark:bg-bgDark/95 z-[99] flex flex-col items-center justify-center transition-opacity duration-300">
         <i class="fa-solid fa-circle-notch fa-spin text-4xl text-primary mb-4"></i>
-        <p class="font-medium text-gray-700 dark:text-gray-300 mt-2">Menyinkronkan Workspace...</p>
+        <p class="font-medium text-gray-700 dark:text-gray-300 mt-2">Memverifikasi Hak Akses...</p>
     </div>
 
     <nav class="bg-white dark:bg-bgCardDark border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 h-[70px] shadow-sm transition-colors">
@@ -305,7 +305,7 @@
         // ==============================================================
         // 1. BACKEND & DATA 
         // ==============================================================
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzQR5-8Y5aDsnn2cO5zk4od7Ple2-YBb2CSBPR2b2dHchy89xwtoioV7v_6q4A7fkgslQ/exec';
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyJcarKrJQUYKMK81f531gpgwY8UVQxSVz6NExABGst1fnprd8DnCdhIH0VpQzeDg/exec'; // GANTI URL INI
         const MIN_SCORE_PASS = 80;
 
         const courseData = {
@@ -353,7 +353,7 @@
             { q: "Memberikan hak eksekusi script.sh?", options: ["chmod +x script.sh", "chown script", "execute script", "run script"], ans: 0 }
         ];
 
-        let currentCourse = "linux"; // Fallback default
+        let currentCourse = "linux";
         let activeData = courseData[currentCourse];
         let currentChapterId = null;
         
@@ -377,40 +377,43 @@
             if(rawUserData) {
                 const session = JSON.parse(rawUserData);
                 userEmail = session.email;
-                if(session.modul) {
+                if(session.modul && courseData[session.modul]) {
                     currentCourse = session.modul;
-                    activeData = courseData[currentCourse] || courseData["linux"];
+                    activeData = courseData[currentCourse];
+                } else {
+                    currentCourse = "linux";
+                    activeData = courseData["linux"];
                 }
                 
                 progressKey = 'neokademi_progress_' + userEmail.trim().toLowerCase(); 
                 quizScoreKey = 'neokademi_quizscore_' + userEmail.trim().toLowerCase();
                 quizAnswersKey = 'neokademi_quizanswers_' + userEmail.trim().toLowerCase();
                 
-                const shortName = userEmail.split('@')[0];
+                const shortName = session.name || userEmail.split('@')[0];
                 document.getElementById('user-greeting').textContent = shortName;
                 document.getElementById('mobile-user-greeting').textContent = shortName;
                 
                 try {
+                    // Pengecekan KETAT Hak Akses (Strict Gatekeeper)
                     const targetUrl = `${GAS_URL}?action=getProgress&email=${encodeURIComponent(userEmail)}&t=${new Date().getTime()}`;
                     const response = await fetch(targetUrl);
                     const result = await response.json();
                     
                     if(result.status === 'success') {
-                        if(result.certificate && result.certificate !== "") { userCertUrl = result.certificate; } 
-                        else { userCertUrl = ""; }
-
-                        if(result.progress && result.progress !== "") {
+                        if(result.certificate) userCertUrl = result.certificate;
+                        
+                        if(result.progress) {
                             completedChapters = result.progress.split(',').map(Number);
                             localStorage.setItem(progressKey, JSON.stringify(completedChapters));
                         } else {
                             completedChapters = [];
                             localStorage.removeItem(progressKey);
                         }
-
+                        
                         if(result.quiz !== undefined && result.quiz !== "") {
                             quizScoreVal = parseInt(result.quiz);
                             localStorage.setItem(quizScoreKey, quizScoreVal);
-                            if(result.answers && result.answers !== "") {
+                            if(result.answers) {
                                 userAnswers = JSON.parse(result.answers);
                                 localStorage.setItem(quizAnswersKey, JSON.stringify(userAnswers));
                             }
@@ -420,16 +423,24 @@
                             localStorage.removeItem(quizScoreKey);
                             localStorage.removeItem(quizAnswersKey);
                         }
-                    } else { throw new Error("Gagal mengambil data dari server"); }
+                    } else { 
+                        // Jika backend menolak (status !== success), maka user di Kick-Out!
+                        alert("Akses Ditolak! Anda belum memiliki akses ke modul ini atau sesi tidak valid.");
+                        window.location.replace("detail.html?modul=" + currentCourse);
+                        return;
+                    }
                 } catch(err) {
-                    console.error("Gagal sinkron, fallback ke data lokal.");
-                    completedChapters = JSON.parse(localStorage.getItem(progressKey)) || [];
-                    const localScore = localStorage.getItem(quizScoreKey);
-                    if(localScore !== null) quizScoreVal = parseInt(localScore);
-                    userAnswers = JSON.parse(localStorage.getItem(quizAnswersKey)) || [];
+                    // Jika koneksi gagal, jangan biarkan masuk menggunakan data sisa (Cache). Kick-out!
+                    alert("Koneksi gagal saat memverifikasi hak akses. Pastikan internet stabil dan coba lagi.");
+                    window.location.replace("detail.html?modul=" + currentCourse);
+                    return;
                 }
+            } else {
+                window.location.replace('login.html');
+                return;
             }
 
+            // Jika lolos semua validasi, render halaman
             document.getElementById('desktop-course-title').textContent = activeData.courseName;
             document.getElementById('mobile-course-title').textContent = activeData.courseName;
             document.getElementById('global-loader').classList.add('opacity-0');
@@ -465,7 +476,7 @@
             }
         }
 
-        // --- RENDER SIDEBAR MATERI (Desktop & Mobile Clone) ---
+        // --- RENDER SIDEBAR MATERI ---
         function renderSidebarList() {
             const listDesktop = document.getElementById('desktop-materi-list');
             listDesktop.innerHTML = '';
@@ -501,7 +512,6 @@
                 listDesktop.appendChild(btn);
             });
 
-            // Tambah Final Quiz Button
             const isAllDone = completedChapters.length >= activeData.chapters.length;
             const isQuizActive = currentChapterId === null && !document.getElementById('quiz-container').classList.contains('hidden');
             
@@ -510,29 +520,19 @@
             
             if(isAllDone) {
                 quizBtn.className = `w-full text-left p-5 transition-colors flex items-center justify-between border-t border-gray-100 dark:border-gray-800 ${isQuizActive ? 'bg-blue-50/50 dark:bg-blue-900/10 border-l-[3px] border-l-primary' : 'bg-white hover:bg-gray-50 dark:bg-bgCardDark dark:hover:bg-gray-800'}`;
-                quizBtn.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <i class="fa-solid fa-medal text-primary text-base ml-1"></i>
-                        <span class="text-[13.5px] font-semibold text-primary">${quizText}</span> 
-                    </div>`;
+                quizBtn.innerHTML = `<div class="flex items-center space-x-3"><i class="fa-solid fa-medal text-primary text-base ml-1"></i><span class="text-[13.5px] font-semibold text-primary">${quizText}</span></div>`;
                 quizBtn.setAttribute('data-quiz', 'true');
             } else {
                 quizBtn.className = `w-full text-left p-5 transition-colors flex items-center justify-between opacity-60 cursor-not-allowed border-t border-gray-100 dark:border-gray-800`;
-                quizBtn.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <i class="fa-solid fa-lock text-gray-400 text-base ml-1"></i>
-                        <span class="text-[13.5px] font-medium text-gray-500">Final Quiz</span> 
-                    </div>`;
+                quizBtn.innerHTML = `<div class="flex items-center space-x-3"><i class="fa-solid fa-lock text-gray-400 text-base ml-1"></i><span class="text-[13.5px] font-medium text-gray-500">Final Quiz</span></div>`;
             }
             listDesktop.appendChild(quizBtn);
 
             updateProgressBar();
             
-            // Kloning ke mobile sidebar progress
             const mobileContainer = document.getElementById('mobile-materi-list');
             mobileContainer.innerHTML = listDesktop.innerHTML;
             
-            // Re-attach event listener
             document.querySelectorAll('#desktop-materi-list button').forEach(btn => {
                 btn.onclick = () => {
                     if(btn.hasAttribute('data-id')) loadChapter(parseInt(btn.getAttribute('data-id')));
@@ -540,12 +540,11 @@
                 };
             });
 
-            // Mobile click = load + hide panel
             document.querySelectorAll('#mobile-materi-list button').forEach(btn => {
                 btn.onclick = () => {
                     if(btn.hasAttribute('data-id')) loadChapter(parseInt(btn.getAttribute('data-id')));
                     else if(btn.hasAttribute('data-quiz')) openQuizPage();
-                    toggleProgressPanel(); // Tutup setelah klik di HP
+                    toggleProgressPanel(); 
                 };
             });
         }
@@ -610,8 +609,6 @@
                     actionContainer.innerHTML = `<button onclick="openQuizPage()" class="bg-primary hover:bg-primaryHover text-white px-6 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all shadow-sm hover:-translate-y-0.5 animate-content"><i class="fa-solid fa-medal"></i> Lanjut ke Final Quiz</button>`;
                 } else {
                     actionContainer.innerHTML = `<button disabled class="bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400 px-6 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 cursor-not-allowed border border-gray-200 dark:border-gray-700 animate-content"><i class="fa-solid fa-check"></i> Selesai Dipelajari</button>`;
-                    
-                    // Auto load next
                     const nextChapter = activeData.chapters.find(c => c.id === id + 1);
                     if(nextChapter) setTimeout(() => { loadChapter(nextChapter.id); }, 800);
                 }
@@ -791,23 +788,19 @@
             if (userCertUrl && userCertUrl !== "") {
                 window.open(userCertUrl, '_blank');
             } else if (isGeneratingCert) {
-                // Effect on Header Button
                 const headerIcon = document.getElementById('header-cert-icon');
                 const headerText = document.getElementById('header-cert-text');
                 if(headerIcon) headerIcon.className = "fa-solid fa-circle-notch fa-spin text-amber-500 text-base";
                 if(headerText) headerText.textContent = "Memuat...";
                 
-                // Effect on Mobile Button
                 const mobileIcon = document.getElementById('mobile-cert-icon');
                 const mobileText = document.getElementById('mobile-cert-text');
-                // Mengubah warna menjadi amber sementara saat loading
                 if(mobileIcon) mobileIcon.className = "fa-solid fa-circle-notch fa-spin w-5 text-center text-amber-500 text-lg";
                 if(mobileText) mobileText.textContent = "Memuat...";
                 
                 setTimeout(() => {
                     if(headerIcon) headerIcon.className = "fa-solid fa-award text-amber-500 text-base";
                     if(headerText) headerText.textContent = "Sertifikat";
-                    // Kembalikan ke warna abu-abu
                     if(mobileIcon) mobileIcon.className = "fa-solid fa-award w-5 text-center text-gray-400 dark:text-gray-500 text-lg";
                     if(mobileText) mobileText.textContent = "Sertifikat Belajar";
                 }, 3000);
@@ -959,7 +952,6 @@
             const iconCompress = document.getElementById('icon-compress');
             
             if (isExpanded) { 
-                // Tampilkan compress, sembunyikan expand
                 if (iconExpand) { 
                     iconExpand.classList.replace('scale-100', 'scale-50'); 
                     iconExpand.classList.replace('opacity-100', 'opacity-0'); 
@@ -971,7 +963,6 @@
                     iconCompress.classList.replace('rotate-90', 'rotate-0'); 
                 }
             } else { 
-                // Tampilkan expand, sembunyikan compress
                 if (iconExpand) { 
                     iconExpand.classList.replace('scale-50', 'scale-100'); 
                     iconExpand.classList.replace('opacity-0', 'opacity-100'); 
@@ -987,7 +978,6 @@
 
         // --- TOGGLE PANELS (Mobile & Desktop) ---
         function toggleProgressPanel() {
-            // Pada Mobile (< 1024px/lg breakpoint pada tailwind)
             if (window.innerWidth < 1024) {
                 const panel = document.getElementById('mobile-progress-panel');
                 const overlay = document.getElementById('progress-overlay');
@@ -996,23 +986,22 @@
                     overlay.classList.remove('hidden');
                     setTimeout(() => overlay.classList.add('opacity-100'), 10);
                     panel.classList.remove('-translate-x-full');
-                    setExpanded(true); // Putar animasi ke Collapse
+                    setExpanded(true);
                 } else {
                     panel.classList.add('-translate-x-full');
                     overlay.classList.remove('opacity-100');
                     setTimeout(() => overlay.classList.add('hidden'), 300);
-                    setExpanded(false); // Putar animasi ke Expand
+                    setExpanded(false);
                 }
             } else {
-                // Pada Desktop
                 const sidebar = document.getElementById('desktop-sidebar');
                 
                 if (sidebar.classList.contains('sidebar-desktop-hidden')) {
                     sidebar.classList.remove('sidebar-desktop-hidden');
-                    setExpanded(true); // Putar animasi ke Collapse
+                    setExpanded(true);
                 } else {
                     sidebar.classList.add('sidebar-desktop-hidden');
-                    setExpanded(false); // Putar animasi ke Expand
+                    setExpanded(false);
                 }
             }
         }
