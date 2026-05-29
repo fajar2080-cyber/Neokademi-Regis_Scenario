@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Courses | Neokademi Dashboard</title>
+    
+    <script>
+        const sessionData = localStorage.getItem('neokademi_user');
+        if (!sessionData) {
+            window.location.replace('login.html');
+        } else {
+            const session = JSON.parse(sessionData);
+            const now = new Date().getTime();
+            if (!session.isLoggedIn || !session.expiry || now > session.expiry) {
+                localStorage.removeItem('neokademi_user');
+                alert("Sesi Anda telah berakhir. Silakan login kembali.");
+                window.location.replace('login.html');
+            }
+        }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5', 
+                        primaryHover: '#4338CA',
+                        darkBg: '#0f172a',
+                        darkCard: '#1e293b'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-[#FAFAFA] text-gray-800 dark:bg-darkBg dark:text-gray-100 antialiased min-h-screen flex flex-col">
+
+    <nav class="sticky top-0 z-50 bg-white/90 dark:bg-darkCard/90 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800 transition-colors shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-[76px] items-center">
+                 <a href="index.html" class="flex items-center">
+                    <img src="assets/img/Neokademi.png" alt="Logo Neokademi" class="w-10 h-10 object-contain mr-3" onerror="this.src='https://ui-avatars.com/api/?name=NK&background=4F46E5&color=fff'">
+                    <span class="font-extrabold text-2xl tracking-tight text-gray-900 dark:text-white hidden sm:block">Neokademi</span>
+                </a>
+                
+                <div class="flex items-center space-x-6">
+                    <button id="theme-toggle" class="text-gray-400 hover:text-amber-500 dark:text-gray-500 dark:hover:text-amber-400 focus:outline-none transition-colors">
+                        <i id="theme-icon" class="fa-solid fa-moon text-xl"></i>
+                    </button>
+                    
+                    <div class="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
+
+                    <div class="relative group">
+                        <button class="flex items-center space-x-3 focus:outline-none hover:opacity-80 transition-opacity pb-1">
+                            <div class="hidden md:flex flex-col text-right">
+                                <span class="text-sm font-bold text-gray-900 dark:text-white leading-tight" id="nav-user-name">Memuat...</span>
+                                <span class="text-[11px] font-medium text-gray-500">Member Premium</span>
+                            </div>
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 text-primary font-bold">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <i class="fa-solid fa-angle-down text-gray-400 text-xs transition-transform group-hover:rotate-180"></i>
+                        </button>
+                        
+                        <div class="absolute right-0 mt-2 w-56 bg-white dark:bg-darkCard border border-gray-100 dark:border-gray-800 rounded-2xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50 overflow-hidden">
+                            <div class="p-4 border-b border-gray-50 dark:border-gray-800 md:hidden">
+                                <span class="block text-sm font-bold text-gray-900 dark:text-white truncate" id="mobile-nav-user-name">Siswa</span>
+                                <span class="block text-xs text-gray-500 truncate" id="nav-user-email">email@domain.com</span>
+                            </div>
+                            <div class="p-2">
+                                <a href="kelas-list.html" class="block px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl transition-colors">
+                                    <i class="fa-solid fa-shop w-5 text-gray-400"></i> Katalog Kelas
+                                </a>
+                                <button onclick="logout()" class="w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-colors mt-1">
+                                    <i class="fa-solid fa-sign-out-alt w-5"></i> Keluar Workspace
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
+        
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6 animate-fade-in">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-2">My Courses</h1>
+                <p class="text-gray-500 dark:text-gray-400 text-lg">Lanjutkan progres belajar Anda dan kembangkan keahlian baru.</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 order-2 lg:order-1 space-y-6">
+                
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+                    <i class="fa-solid fa-book-open text-primary mr-3"></i> Modul Aktif Anda
+                </h2>
+
+                <div id="courses-container" class="space-y-4">
+                    <div class="bg-white dark:bg-darkCard p-5 rounded-2xl border border-gray-200 dark:border-gray-800 animate-pulse flex flex-col sm:flex-row gap-5">
+                        <div class="w-full sm:w-48 h-32 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
+                        <div class="flex-1 space-y-4 py-2">
+                            <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                            <div class="pt-4"><div class="h-2 bg-gray-200 dark:bg-gray-700 rounded w-full"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="lg:col-span-1 order-1 lg:order-2 animate-fade-in" style="animation-delay: 0.1s;">
+                <div class="bg-white dark:bg-darkCard rounded-[2rem] p-6 border border-gray-200 dark:border-gray-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none sticky top-[100px]">
+                    <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 text-primary flex items-center justify-center rounded-xl mb-5 border border-indigo-100 dark:border-indigo-800/50">
+                        <i class="fa-solid fa-key text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Redeem Passkey</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+                        Masukkan kode lisensi yang Anda terima di email untuk membuka akses modul baru.
+                    </p>
+
+                    <form id="redeem-form" class="space-y-4">
+                        <div id="redeem-alert" class="hidden p-3 rounded-lg text-sm font-medium mb-2 border" role="alert">
+                            <span id="redeem-alert-msg" class="flex items-center"></span>
+                        </div>
+
+                        <div class="relative">
+                            <input type="text" id="passkey-input" required class="appearance-none rounded-xl relative block w-full px-4 py-3.5 border border-gray-200 dark:border-gray-700 placeholder-gray-400 text-gray-900 dark:text-white bg-gray-50 dark:bg-[#0B1120] focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-sm font-mono font-bold tracking-widest uppercase transition-colors" placeholder="LNX-XXXXXX">
+                        </div>
+                        <button type="submit" id="btn-redeem" class="w-full py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-bold rounded-xl hover:bg-primary dark:hover:bg-primary dark:hover:text-white transition-colors flex justify-center items-center gap-2 shadow-md">
+                            <span id="btn-redeem-text">Aktivasi Modul</span>
+                            <i id="btn-redeem-spinner" class="fa-solid fa-circle-notch fa-spin hidden"></i>
+                        </button>
+                    </form>
+
+                    <div class="mt-6 pt-5 border-t border-gray-100 dark:border-gray-800 text-center">
+                        <a href="kelas-list.html" class="text-sm font-semibold text-primary hover:text-primaryHover transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-cart-shopping"></i> Beli Modul Baru
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-white dark:bg-darkCard py-8 border-t border-gray-200 dark:border-gray-800 mt-auto text-center">
+        <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">
+            &copy; <span id="year"></span> Neokademi E-Course. All rights reserved.
+        </p>
+    </footer>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Data Mocking Modul (Sebagai Kamus Detail Tampilan Berdasarkan Kode GAS)
+        const moduleDictionary = {
+            "linux": {
+                title: "Linux System Administration",
+                thumb: "https://upload.wikimedia.org/wikipedia/commons/a/af/Tux.png",
+                color: "yellow",
+                icon: "fa-linux",
+                totalChapters: 7
+            },
+            "cloud": {
+                title: "Cloud Modern Workspace",
+                thumb: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
+                color: "blue",
+                icon: "fa-cloud",
+                totalChapters: 7
+            },
+            "digitalmarketing": {
+                title: "Digital Marketing Mastery",
+                thumb: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+                color: "rose",
+                icon: "fa-bullhorn",
+                totalChapters: 7
+            }
+        };
+
+        // --- Inisialisasi User & UI ---
+        const session = JSON.parse(localStorage.getItem('neokademi_user'));
+        const userEmail = session.email;
+        const userName = userEmail.split('@')[0]; // Tampilkan bagian depan email sementara sebelum get profile dari backend
+        
+        document.getElementById('nav-user-name').textContent = "Hi, " + userName;
+        document.getElementById('mobile-nav-user-name').textContent = userName;
+        document.getElementById('nav-user-email').textContent = userEmail;
+
+        // URL GAS BACKEND 
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyJcarKrJQUYKMK81f531gpgwY8UVQxSVz6NExABGst1fnprd8DnCdhIH0VpQzeDg/exec'; 
+
+        // --- Fetch Daftar Modul User ---
+        async function fetchMyCourses() {
+            const container = document.getElementById('courses-container');
+            try {
+                // Endpoint baru: action=get_my_courses
+                const response = await fetch(`${GAS_URL}?action=get_my_courses&email=${encodeURIComponent(userEmail)}`);
+                const result = await response.json();
+
+                container.innerHTML = ''; // Hapus skeleton
+
+                if (result.status === 'success' && result.data && result.data.length > 0) {
+                    result.data.forEach(courseData => {
+                        renderCourseCard(courseData);
+                    });
+                } else {
+                    renderEmptyState();
+                }
+
+            } catch (error) {
+                console.error("Gagal mengambil data kursus:", error);
+                // Fallback untuk Demo jika backend belum siap:
+                // renderEmptyState();
+                
+                // MOCKUP DATA JIKA OFFLINE (Bisa dihapus nanti)
+                container.innerHTML = '';
+                renderCourseCard({ modulId: 'linux', progressRaw: '1,2,3', isCompleted: false });
+            }
+        }
+
+        function renderCourseCard(data) {
+            const container = document.getElementById('courses-container');
+            const modInfo = moduleDictionary[data.modulId] || { title: "Modul Premium", thumb: "", color: "gray", icon: "fa-book", totalChapters: 10 };
+            
+            // Hitung Progress
+            let progressArr = [];
+            if(data.progressRaw) progressArr = data.progressRaw.split(',');
+            const percent = Math.round((progressArr.length / modInfo.totalChapters) * 100);
+
+            const card = document.createElement('div');
+            card.className = "bg-white dark:bg-darkCard rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col sm:flex-row overflow-hidden group animate-fade-in";
+            
+            card.innerHTML = `
+                <div class="sm:w-56 bg-gray-50 dark:bg-[#0B1120] relative flex items-center justify-center p-6 border-b sm:border-b-0 sm:border-r border-gray-100 dark:border-gray-800">
+                    <div class="absolute inset-0 bg-${modInfo.color}-500/5 group-hover:bg-${modInfo.color}-500/10 transition-colors"></div>
+                    ${data.modulId === 'linux' ? 
+                        `<img src="${modInfo.thumb}" class="h-24 z-10 group-hover:scale-110 transition-transform duration-500">` : 
+                        `<i class="fa-solid ${modInfo.icon} text-5xl text-${modInfo.color}-500 z-10 group-hover:scale-110 transition-transform duration-500"></i>`
+                    }
+                </div>
+                <div class="p-5 sm:p-6 flex-1 flex flex-col justify-center">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-${modInfo.color}-600 dark:text-${modInfo.color}-400 bg-${modInfo.color}-50 dark:bg-${modInfo.color}-900/20 px-2.5 py-1 rounded-md">PREMIUM</span>
+                        ${percent >= 100 ? `<span class="text-xs font-bold text-emerald-500 flex items-center"><i class="fa-solid fa-certificate mr-1"></i> Lulus</span>` : ''}
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary transition-colors">${modInfo.title}</h3>
+                    
+                    <div class="mt-auto">
+                        <div class="flex justify-between text-xs font-semibold text-gray-500 dark:text-gray-400 mb-1.5">
+                            <span>Progres Belajar</span>
+                            <span>${percent}%</span>
+                        </div>
+                        <div class="w-full h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-emerald-500 rounded-full" style="width: ${percent}%"></div>
+                        </div>
+                        <button onclick="lanjutBelajar('${data.modulId}')" class="w-full py-2.5 bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-bold rounded-xl hover:bg-primary dark:hover:bg-primary dark:hover:text-white transition-colors shadow-sm">
+                            Lanjut Belajar <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        }
+
+        function renderEmptyState() {
+            const container = document.getElementById('courses-container');
+            container.innerHTML = `
+                <div class="bg-gray-50 dark:bg-[#0B1120] rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 p-10 text-center animate-fade-in">
+                    <div class="w-20 h-20 bg-white dark:bg-darkCard rounded-full flex items-center justify-center mx-auto mb-5 shadow-sm">
+                        <i class="fa-solid fa-folder-open text-3xl text-gray-400"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Belum Ada Modul</h3>
+                    <p class="text-gray-500 dark:text-gray-400 max-w-sm mx-auto mb-6">Anda belum memiliki akses ke modul manapun. Masukkan passkey Anda di samping atau beli kelas baru.</p>
+                    <a href="kelas-list.html" class="inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-200 dark:bg-darkCard dark:border-gray-700 font-semibold rounded-xl hover:text-primary dark:hover:text-primary transition-colors shadow-sm">
+                        Katalog Kelas
+                    </a>
+                </div>
+            `;
+        }
+
+        // --- Logika Lanjut Belajar ---
+        function lanjutBelajar(modulId) {
+            // Update session active module
+            const currentSession = JSON.parse(localStorage.getItem('neokademi_user'));
+            currentSession.modul = modulId;
+            localStorage.setItem('neokademi_user', JSON.stringify(currentSession));
+            
+            // Redirect to materi
+            window.location.href = 'materi.html';
+        }
+
+        // --- Logika Redeem Passkey ---
+        const redeemForm = document.getElementById('redeem-form');
+        const btnRedeem = document.getElementById('btn-redeem');
+        const btnRedeemText = document.getElementById('btn-redeem-text');
+        const btnRedeemSpinner = document.getElementById('btn-redeem-spinner');
+        const alertBox = document.getElementById('redeem-alert');
+        const alertMsg = document.getElementById('redeem-alert-msg');
+
+        function showRedeemAlert(message, type) {
+            alertBox.classList.remove('hidden', 'bg-red-50', 'text-red-600', 'border-red-200', 'bg-emerald-50', 'text-emerald-600', 'border-emerald-200');
+            if(type === 'error') {
+                alertBox.classList.add('bg-red-50', 'text-red-600', 'border-red-200', 'dark:bg-red-900/20', 'dark:text-red-400', 'dark:border-red-800');
+                alertMsg.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i> ${message}`;
+            } else {
+                alertBox.classList.add('bg-emerald-50', 'text-emerald-600', 'border-emerald-200', 'dark:bg-emerald-900/20', 'dark:text-emerald-400', 'dark:border-emerald-800');
+                alertMsg.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i> ${message}`;
+            }
+        }
+
+        redeemForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const passkey = document.getElementById('passkey-input').value.trim().toUpperCase();
+
+            btnRedeem.disabled = true;
+            btnRedeemText.textContent = 'Memvalidasi...';
+            btnRedeemSpinner.classList.remove('hidden');
+            alertBox.classList.add('hidden');
+
+            try {
+                // Menembak endpoint action=redeem_passkey (Akan dibuat di GAS)
+                const response = await fetch(`${GAS_URL}?action=redeem_passkey&email=${encodeURIComponent(userEmail)}&passkey=${encodeURIComponent(passkey)}`, {
+                    method: 'GET'
+                });
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    showRedeemAlert('Lisensi berhasil diaktifkan!', 'success');
+                    document.getElementById('passkey-input').value = '';
+                    
+                    // Render skeleton loading dan refresh data
+                    document.getElementById('courses-container').innerHTML = `
+                        <div class="bg-white dark:bg-darkCard p-5 rounded-2xl border border-gray-200 dark:border-gray-800 animate-pulse flex flex-col sm:flex-row gap-5">
+                            <div class="w-full sm:w-48 h-32 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
+                            <div class="flex-1 space-y-4 py-2">
+                                <div class="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                                <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                            </div>
+                        </div>`;
+                    
+                    setTimeout(fetchMyCourses, 1500); // Fetch ulang data module
+
+                } else {
+                    showRedeemAlert(result.message || 'Passkey tidak valid atau sudah digunakan.', 'error');
+                }
+            } catch (error) {
+                console.error('Error redeeming passkey:', error);
+                showRedeemAlert('Koneksi terputus. Silakan coba lagi.', 'error');
+            } finally {
+                btnRedeem.disabled = false;
+                btnRedeemText.textContent = 'Aktivasi Modul';
+                btnRedeemSpinner.classList.add('hidden');
+            }
+        });
+
+        // --- Dark Mode System ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const html = document.documentElement;
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+            updateIcons('dark');
+        } else {
+            html.classList.remove('dark');
+            updateIcons('light');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            updateIcons(isDark ? 'dark' : 'light');
+        });
+
+        function updateIcons(theme) {
+            const isDark = theme === 'dark';
+            themeIcon.className = `fa-solid ${isDark ? 'fa-sun' : 'fa-moon'} text-xl transition-transform duration-300 rotate-0 hover:rotate-90`;
+        }
+
+        // --- Logout ---
+        function logout() {
+            if(confirm("Keluar dari Workspace?")) {
+                localStorage.removeItem('neokademi_user');
+                window.location.replace('login.html');
+            }
+        }
+
+        // Jalankan fetch saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', fetchMyCourses);
+
+    </script>
+</body>
+</html>
