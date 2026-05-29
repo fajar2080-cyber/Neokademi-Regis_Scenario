@@ -317,25 +317,27 @@
         document.getElementById('feature-lesson-count').textContent = lessonCount + " Lessons";
 
         // --- VALIDASI HAK AKSES STRICT DARI SERVER ---
+      // --- Auth & Session Logic ---
         const rawSession = localStorage.getItem('neokademi_user');
         let session = null;
-        let isEnrolled = false;
+        let isEnrolled = false; // Default: Tidak punya akses
         let completedChapters = [];
 
         async function checkEnrollmentStatus(email) {
             try {
-                // Fetch status kepemilikan kelas langsung dari Server
+                // PANGGIL BACKEND UNTUK MEMASTIKAN HAK AKSES
+                // Kita cek ke action 'getProgress'
                 const response = await fetch(`${GAS_URL}?action=getProgress&email=${encodeURIComponent(email)}`);
                 const result = await response.json();
                 
-                // Jika backend menjawab 'success', artinya email ada di Tab Progress terkait
+                // Jika status 'success', artinya email ada di Tab Progress_Linux
                 if (result.status === 'success') {
                     isEnrolled = true;
                     if (result.progress && result.progress !== "") {
                         completedChapters = result.progress.split(',').map(Number);
                     }
                 } else {
-                    isEnrolled = false; // Akses ditolak oleh database
+                    isEnrolled = false; // Akses Ditolak oleh Database
                 }
             } catch (e) {
                 isEnrolled = false;
@@ -345,27 +347,22 @@
             }
         }
 
+        // Jalankan pengecekan saat halaman dimuat
         if (rawSession) {
             session = JSON.parse(rawSession);
             const now = new Date().getTime();
             if (session.isLoggedIn && session.expiry && now <= session.expiry) {
-                // Update UI Navbar karena user login
-                document.getElementById('nav-auth-container').innerHTML = `
-                    <a href="my-courses.html" class="px-6 py-2.5 bg-gray-100 text-darkBlue font-bold rounded-full hover:bg-primary hover:text-white transition-colors text-sm shadow-sm"><i class="fa-solid fa-users mr-1.5"></i> Dashboard</a>
-                `;
-                document.getElementById('mobile-auth-container').innerHTML = `
-                    <a href="my-courses.html" class="block w-full text-center py-3.5 rounded-full text-white bg-primary font-bold hover:bg-primaryHover transition-colors shadow-md"><i class="fa-solid fa-users mr-1.5"></i> Dashboard Belajar</a>
-                `;
-                
-                // Cek hak akses modul ini ke database
+                // User sudah Login, sekarang verifikasi apakah dia sudah Enroll kelas ini
                 checkEnrollmentStatus(session.email);
             } else {
+                // Session expired
                 localStorage.removeItem('neokademi_user');
                 session = null;
                 renderSidebarAction();
                 renderSyllabusList();
             }
         } else {
+            // User belum Login
             renderSidebarAction();
             renderSyllabusList();
         }
