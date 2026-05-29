@@ -114,7 +114,7 @@
                         </div>
                         <div class="absolute w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 left-[3px] translate-x-[26px] dark:translate-x-0"></div>
                     </button>
-                    <button onclick="toggleMobileMenu()" class="text-gray-600 dark:text-gray-300 hover:text-primary focus:outline-none">
+                    <button onclick="toggleMobileMenu()" class="text-gray-600 dark:text-gray-300 hover:text-primary focus:outline-none ml-2">
                         <i class="fa-solid fa-bars text-2xl"></i>
                     </button>
                 </div>
@@ -145,7 +145,7 @@
             <a href="index.html#contact-section" onclick="toggleMobileMenu()" class="block text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors">Hubungi Kami</a>
             
             <div id="mobile-auth-container" class="pt-6 border-t border-gray-100 dark:border-gray-800 mt-auto">
-                <a href="login.html" class="block w-full text-center py-3.5 rounded-full text-white bg-primary font-semibold hover:bg-primaryHover transition-colors">
+                <a href="login.html" class="block w-full text-center py-3.5 rounded-full text-white bg-primary font-semibold hover:bg-primaryHover transition-colors shadow-md">
                     Masuk Kelas
                 </a>
             </div>
@@ -252,7 +252,7 @@
         </div>
     </main>
 
-    <footer class="bg-white dark:bg-darkCard pt-16 pb-8 border-t border-gray-100 dark:border-gray-800 mt-auto">
+    <footer class="bg-white dark:bg-darkCard pt-16 pb-8 border-t border-gray-100 dark:border-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <div class="col-span-1 md:col-span-2">
@@ -301,35 +301,31 @@
         </div>
     </footer>
 
-    <a href="https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20ingin%20konsultasi%20kelas" target="_blank" class="wa-float fixed bottom-6 right-6 z-50 bg-[#25D366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl hover:bg-[#1ebe57] hover:scale-110 transition-all group">
-        <i class="fa-brands fa-whatsapp text-3xl"></i>
-    </a>
-
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // Init Animasi Scroll
         AOS.init({ once: true, offset: 50, duration: 800 });
 
-        // Set Tahun Footer
-        document.getElementById('year').textContent = new Date().getFullYear();
-
-        // --- Cek Sesi Login untuk Navbar ---
-        const userSession = JSON.parse(localStorage.getItem('neokademi_user'));
-        const now = new Date().getTime();
-        
-        if (userSession && userSession.isLoggedIn && userSession.expiry && now <= userSession.expiry) {
-            // Ubah tombol di Navbar Desktop
-            document.getElementById('nav-auth-container').innerHTML = `
-                <a href="my-courses.html" class="px-6 py-2.5 rounded-full bg-primary text-white font-semibold hover:bg-primaryHover transition-all shadow-md">
-                    <i class="fa-solid fa-users mr-1.5"></i> Dashboard
-                </a>
-            `;
-            // Ubah tombol di Navbar Mobile
-            document.getElementById('mobile-auth-container').innerHTML = `
-                <a href="my-courses.html" class="block w-full text-center py-3.5 rounded-full text-white bg-primary font-semibold hover:bg-primaryHover transition-colors shadow-md">
-                    <i class="fa-solid fa-users mr-1.5"></i> Dashboard Belajar
-                </a>
-            `;
+        // Cek Sesi Login untuk Navbar
+        const rawSession = localStorage.getItem('neokademi_user');
+        if (rawSession) {
+            const session = JSON.parse(rawSession);
+            const now = new Date().getTime();
+            if (session.isLoggedIn && session.expiry && now <= session.expiry) {
+                // Update tombol Desktop
+                document.getElementById('nav-auth-container').innerHTML = `
+                    <a href="my-courses.html" class="px-6 py-2.5 rounded-full bg-primary text-white font-semibold hover:bg-primaryHover transition-all shadow-md">
+                        <i class="fa-solid fa-users mr-1.5"></i> Dashboard
+                    </a>
+                `;
+                // Update tombol Mobile
+                document.getElementById('mobile-auth-container').innerHTML = `
+                    <a href="my-courses.html" class="block w-full text-center py-3.5 rounded-full text-white bg-primary font-semibold hover:bg-primaryHover transition-colors shadow-md">
+                        <i class="fa-solid fa-users mr-1.5"></i> Dashboard
+                    </a>
+                `;
+            } else {
+                localStorage.removeItem('neokademi_user');
+            }
         }
 
         // --- Pilled Smooth Sliding Dark Mode Toggle Logic ---
@@ -349,18 +345,15 @@
         }
 
         themeToggles.forEach(toggle => {
-            toggle.addEventListener('click', () => {
-                const isDark = !html.classList.contains('dark');
-                applyTheme(isDark);
-            });
+            toggle.addEventListener('click', () => applyTheme(!html.classList.contains('dark')));
         });
 
         // --- Mobile Menu Logic ---
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
         let isMobileMenuOpen = false;
+
         function toggleMobileMenu() {
-            const mobileMenu = document.getElementById('mobile-menu');
-            const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
-            
             isMobileMenuOpen = !isMobileMenuOpen;
             if (isMobileMenuOpen) {
                 mobileBackdrop.classList.remove('hidden');
