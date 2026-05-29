@@ -6,22 +6,45 @@
     <title>Detail Kelas | Neokademi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
-                    colors: { primary: '#4F46E5', primaryHover: '#4338CA', darkBg: '#0f172a', darkCard: '#1e293b' },
-                    fontFamily: { sans: ['Inter', 'sans-serif'] }
+                    colors: {
+                        primary: '#4F46E5', 
+                        primaryHover: '#4338CA',
+                        secondary: '#F3F4F6',
+                        darkBg: '#0f172a',
+                        darkCard: '#1e293b'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+                    }
                 }
             }
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
-        .banner-overlay { background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.8) 100%), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop') center/cover; }
-        .sticky-sidebar { position: sticky; top: 100px; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        html { scroll-behavior: smooth; font-family: 'Inter', sans-serif; }
+        body { transition: background-color 0.3s, color 0.3s; overflow-x: hidden; }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .banner-overlay {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.8) 100%), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop') center/cover;
+        }
+
+        .sticky-sidebar {
+            position: sticky;
+            top: 100px;
+        }
     </style>
 </head>
 <body class="bg-[#FAFAFA] text-gray-800 dark:bg-darkBg dark:text-gray-100 antialiased min-h-screen flex flex-col">
@@ -29,39 +52,156 @@
     <nav class="sticky top-0 z-50 bg-white/90 dark:bg-darkBg/90 backdrop-blur-lg border-b border-gray-100 dark:border-gray-800 transition-colors">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
-                <a href="index.html" class="flex items-center">
-                    <img src="assets/img/Neokademi.png" alt="Logo" class="w-10 h-10 object-contain mr-3">
-                    <span class="font-extrabold text-2xl dark:text-white">Neokademi</span>
+                <a href="index.html" class="flex items-center cursor-pointer">
+                    <img src="assets/img/Neokademi.png" alt="Logo Neokademi" class="w-10 h-10 object-contain mr-3" onerror="this.src='https://ui-avatars.com/api/?name=NK&background=4F46E5&color=fff'">
+                    <span class="font-extrabold text-2xl tracking-tight text-gray-900 dark:text-white">Neokademi</span>
                 </a>
-                <div class="hidden md:flex items-center space-x-5">
-                    <div id="nav-auth-container">
-                        <a href="login.html" class="px-6 py-2.5 rounded-full text-white font-semibold bg-primary hover:bg-primaryHover transition-all">Login</a>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <div class="flex space-x-8 items-center">
+                        <a href="index.html" class="text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary font-medium transition-colors">Beranda</a>
+                        <a href="kelas-list.html" class="text-primary font-medium transition-colors">Katalog Kelas</a>
+                        <a href="index.html#contact-section" class="text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary font-medium transition-colors">Hubungi Kami</a>
                     </div>
+
+                    <div class="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
+
+                    <div class="flex items-center space-x-5">
+                        <button class="theme-toggle relative w-[60px] h-[32px] rounded-full flex items-center transition-colors duration-300 focus:outline-none bg-[#38BDF8] dark:bg-black shadow-inner cursor-pointer border border-transparent dark:border-gray-800">
+                            <div class="absolute inset-0 flex justify-between items-center px-2.5 pointer-events-none">
+                                <i class="fa-regular fa-sun text-white text-[14px] dark:opacity-0 transition-opacity duration-300"></i>
+                                <i class="fa-regular fa-moon text-white text-[14px] opacity-0 dark:opacity-100 transition-opacity duration-300"></i>
+                            </div>
+                            <div class="absolute w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 left-[4px] translate-x-[28px] dark:translate-x-0"></div>
+                        </button>
+                        
+                        <div id="nav-auth-container" class="flex items-center space-x-3">
+                            <a href="login.html" class="px-5 py-2 text-gray-600 dark:text-gray-300 font-medium hover:text-primary dark:hover:text-primary transition-colors">Masuk</a>
+                            <a href="register.html" class="px-5 py-2 bg-primary text-white font-medium rounded-full hover:bg-primaryHover transition-colors shadow-md">Daftar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:hidden flex items-center space-x-4">
+                    <button class="theme-toggle relative w-[54px] h-[28px] rounded-full flex items-center transition-colors duration-300 focus:outline-none bg-[#38BDF8] dark:bg-black shadow-inner cursor-pointer border border-transparent dark:border-gray-800">
+                        <div class="absolute inset-0 flex justify-between items-center px-2 pointer-events-none">
+                            <i class="fa-regular fa-sun text-white text-[12px] dark:opacity-0 transition-opacity duration-300"></i>
+                            <i class="fa-regular fa-moon text-white text-[12px] opacity-0 dark:opacity-100 transition-opacity duration-300"></i>
+                        </div>
+                        <div class="absolute w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 left-[3px] translate-x-[26px] dark:translate-x-0"></div>
+                    </button>
+                    <button onclick="toggleMobileMenu()" class="text-gray-600 dark:text-gray-300 hover:text-primary focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="banner-overlay w-full py-16 text-white">
-        <div class="max-w-7xl mx-auto px-4">
-            <h1 id="detail-title" class="text-4xl md:text-5xl font-extrabold mb-4">Memuat Judul...</h1>
+    <div id="mobile-menu-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/60 z-50 hidden opacity-0 transition-opacity duration-300"></div>
+    <div id="mobile-menu" class="fixed top-0 right-0 z-[60] w-72 h-full bg-white dark:bg-darkCard shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out md:hidden flex flex-col">
+        <div class="px-6 h-20 flex justify-between items-center border-b border-gray-100 dark:border-gray-800">
+            <span class="font-bold text-xl text-gray-900 dark:text-white">Menu</span>
+            <button onclick="toggleMobileMenu()" class="text-gray-400 hover:text-red-500 transition-colors p-2">
+                <i class="fa-solid fa-xmark text-2xl"></i>
+            </button>
+        </div>
+        <div class="flex-grow px-6 py-8 space-y-6 overflow-y-auto">
+            <a href="index.html" class="block text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors">Beranda</a>
+            <a href="kelas-list.html" class="block text-lg font-medium text-primary transition-colors">Katalog Kelas</a>
+            <a href="index.html#contact-section" class="block text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors">Hubungi Kami</a>
+            
+            <div id="mobile-auth-container" class="pt-6 border-t border-gray-100 dark:border-gray-800 mt-auto space-y-3">
+                <a href="login.html" class="block w-full text-center py-3.5 rounded-full text-gray-700 bg-gray-100 font-semibold hover:bg-gray-200 transition-colors">Masuk</a>
+                <a href="register.html" class="block w-full text-center py-3.5 rounded-full text-white bg-primary font-semibold hover:bg-primaryHover transition-colors shadow-md">Daftar Akun</a>
+            </div>
         </div>
     </div>
 
-    <main class="flex-grow max-w-7xl mx-auto px-4 py-10 w-full">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
-            <div class="lg:col-span-2 space-y-8">
-                <div class="bg-white dark:bg-darkCard p-8 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm">
-                    <h2 class="text-2xl font-bold mb-4">Tentang Course</h2>
-                    <p id="detail-desc" class="text-gray-600 dark:text-gray-400">Memuat...</p>
+    <div class="banner-overlay w-full py-16 md:py-24 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row gap-8 items-center md:items-start justify-between">
+                <div class="max-w-3xl">
+                    <div class="flex items-center gap-2 text-sm mb-4">
+                        <a href="kelas-list.html" class="text-gray-300 hover:text-white transition-colors">Katalog</a>
+                        <span class="text-gray-400">/</span>
+                        <a href="#" class="text-gray-300 hover:text-white transition-colors">Premium</a>
+                        <span class="text-gray-400">/</span>
+                        <span class="text-gray-100 font-medium" id="detail-category-breadcrumb">Kategori</span>
+                    </div>
+                    
+                    <h1 id="detail-title" class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">Memuat Judul...</h1>
+                    
+                    <div class="flex items-center text-sm text-gray-300 gap-6 mt-6">
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-infinity text-primary"></i> Akses Selamanya</span>
+                        <span class="flex items-center gap-2"><i class="fa-solid fa-globe text-primary"></i> Bahasa Indonesia</span>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="lg:col-span-1">
-                <div class="bg-white dark:bg-darkCard rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-xl overflow-hidden sticky-sidebar">
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 space-y-8 order-2 lg:order-1">
+                
+                <div class="bg-white dark:bg-darkCard p-8 rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm transition-colors">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Tentang Course</h2>
+                    <p id="detail-desc" class="text-gray-600 dark:text-gray-400 leading-relaxed text-[15px]">
+                        Mohon tunggu sebentar...
+                    </p>
+                </div>
+
+                <div class="bg-white dark:bg-darkCard rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden transition-colors">
+                    <div class="bg-gray-50 dark:bg-darkBg border-b border-gray-100 dark:border-gray-800 p-6 flex justify-between items-center transition-colors">
+                        <h2 class="text-xl font-bold text-gray-900 dark:text-white">Kurikulum Materi</h2>
+                        <span class="text-sm font-bold text-primary bg-blue-50 dark:bg-primary/10 px-3 py-1 rounded-full" id="lesson-count-badge">0 Lessons</span>
+                    </div>
+                    <div class="p-0">
+                        <ul id="detail-syllabus" class="divide-y divide-gray-100 dark:divide-gray-800 transition-colors">
+                            </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="lg:col-span-1 order-1 lg:order-2">
+                <div class="bg-white dark:bg-darkCard rounded-[2rem] border border-gray-100 dark:border-gray-800 shadow-xl dark:shadow-none overflow-hidden sticky-sidebar transition-colors">
+                    
+                    <div class="relative w-full h-[220px] bg-gray-100 dark:bg-darkBg flex items-center justify-center overflow-hidden transition-colors">
+                        <img id="sidebar-thumbnail-img" src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=800&auto=format&fit=crop" alt="Course Poster" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/10"></div>
+                    </div>
+
                     <div class="p-6">
-                        <div id="sidebar-action-buttons" class="space-y-4 mb-6"></div>
+                        <div id="sidebar-action-buttons" class="space-y-4 mb-6">
+                            <div class="flex justify-center items-center py-4 text-gray-400">
+                                <i class="fa-solid fa-circle-notch fa-spin text-2xl"></i>
+                            </div>
+                        </div>
+
+                        <div class="text-center mb-6">
+                            <span class="bg-primary/10 text-primary font-bold text-xs px-3 py-1 rounded-md uppercase tracking-wider">Premium Course</span>
+                        </div>
+
+                        <div class="border-t border-gray-100 dark:border-gray-800 pt-6 transition-colors">
+                            <h4 class="font-bold text-gray-900 dark:text-white mb-4 text-lg">Fasilitas Kelas</h4>
+                            <ul class="space-y-4 text-sm text-gray-600 dark:text-gray-400">
+                                <li class="flex items-center">
+                                    <i class="fa-regular fa-file-lines w-6 text-primary text-lg"></i> 
+                                    <span id="feature-lesson-count">... Lessons</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa-regular fa-circle-question w-6 text-primary text-lg"></i> 
+                                    <span>1 Ujian Kelulusan (Quiz)</span>
+                                </li>
+                                <li class="flex items-center">
+                                    <i class="fa-solid fa-award w-6 text-primary text-lg"></i> 
+                                    <span>Sertifikat Digital</span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -69,83 +209,176 @@
         </div>
     </main>
 
+    <footer class="bg-white dark:bg-darkCard border-t border-gray-100 dark:border-gray-800 py-8 mt-auto transition-colors">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">
+                &copy; <span id="year"></span> Neokademi E-Course. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbyJcarKrJQUYKMK81f531gpgwY8UVQxSVz6NExABGst1fnprd8DnCdhIH0VpQzeDg/exec'; // GANTI URL INI
 
+        // --- Data Mocking ---
         const modulData = {
             linux: {
                 title: "Linux System Administration",
-                desc: "Pelajari Linux dari nol. Mulai dari perintah dasar terminal hingga setup web server.",
-                checkoutLink: "https://lynk.id/drawhen02/6k3o6e37q11q"
+                category: "Server Management",
+                desc: "Pelajari Linux dari nol. Mulai dari perintah dasar terminal, manajemen user, hingga setup web server. Materi disusun praktis sebagai bekal karir System Administrator.",
+                thumbnailImg: "https://upload.wikimedia.org/wikipedia/commons/a/af/Tux.png",
+                checkoutLink: "https://lynk.id/drawhen02/6k3o6e37q11q",
+                syllabus: [
+                    "Instalasi & Pemahaman Hierarki Direktori Linux",
+                    "Manajemen User, Group, dan Hak Akses (File Permission)",
+                    "Manajemen Paket & Repository (APT/YUM)",
+                    "Konfigurasi Jaringan & SSH Server",
+                    "Monitoring Sistem & Manajemen Proses",
+                    "Instalasi Web Server (Nginx/Apache) & Database",
+                    "Dasar-dasar Bash Scripting"
+                ]
+            },
+            cloud: {
+                title: "Cloud Modern Workspace",
+                category: "Cloud Computing",
+                desc: "Panduan praktis mengelola ekosistem kerja digital. Fokus pada implementasi dan manajemen keamanan layanan Microsoft 365 serta Google Workspace untuk perusahaan.",
+                thumbnailImg: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800&auto=format&fit=crop",
+                checkoutLink: "#", 
+                syllabus: [
+                    "Konsep Dasar Modern Workspace & Cloud Computing",
+                    "Setup Tenant & Verifikasi Domain Perusahaan",
+                    "Pembuatan & Manajemen User, Grup, serta Lisensi",
+                    "Konfigurasi Exchange Online, Keamanan Email & Anti-Spam",
+                    "Kolaborasi Tim Menggunakan SharePoint & OneDrive",
+                    "Dasar-dasar Manajemen Perangkat (MDM/Intune)",
+                    "Keamanan Identitas (MFA & Conditional Access)"
+                ]
+            },
+            digitalmarketing: {
+                title: "Digital Marketing Mastery",
+                category: "Marketing",
+                desc: "Kuasai teknik pemasaran digital yang terbukti menghasilkan konversi. Mulai dari riset audiens yang tepat, Facebook Ads, Google Ads, hingga analisis data mendalam.",
+                thumbnailImg: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop",
+                checkoutLink: "#",
+                syllabus: [
+                    "Fundamental Digital Marketing & Customer Journey",
+                    "Riset Audiens & Pembuatan Buyer Persona",
+                    "Social Media Management & Content Strategy",
+                    "Eksekusi Facebook & Instagram Ads Dasar",
+                    "Pengantar Google Ads & Search Engine Marketing (SEM)",
+                    "Dasar-dasar SEO (On-page & Off-page Optimization)",
+                    "Web Analytics, Pelacakan Data & Evaluasi Kampanye"
+                ]
             }
         };
 
         const urlParams = new URLSearchParams(window.location.search);
-        let modulKey = urlParams.get('modul') || 'linux'; 
+        let modulKey = urlParams.get('modul');
+        if (!modulKey || !modulData[modulKey]) modulKey = 'linux'; 
+
         const data = modulData[modulKey];
 
+        // --- Render UI Details Dasar ---
+        document.title = data.title + " - LMS Neokademi";
         document.getElementById('detail-title').textContent = data.title;
         document.getElementById('detail-desc').textContent = data.desc;
+        document.getElementById('detail-category-breadcrumb').textContent = data.category;
+        
+        // Atur styling cover gambar (Tux Linux dibuat contain, selain itu cover)
+        const thumbImg = document.getElementById('sidebar-thumbnail-img');
+        thumbImg.src = data.thumbnailImg;
+        if(modulKey === 'linux') {
+            thumbImg.classList.remove('w-full', 'h-full', 'object-cover');
+            thumbImg.classList.add('h-32', 'object-contain', 'z-10');
+        }
 
-        // Cek Sesi
+        const lessonCount = data.syllabus.length;
+        document.getElementById('lesson-count-badge').textContent = lessonCount + " Lessons";
+        document.getElementById('feature-lesson-count').textContent = lessonCount + " Lessons";
+
+        // --- Auth, Session, & Validasi Akses Modul ---
         const rawSession = localStorage.getItem('neokademi_user');
         let session = null;
         let isEnrolled = false;
+        let completedChapters = [];
 
         async function checkEnrollmentStatus(email) {
             try {
+                // Mengecek ke backend apakah user ini punya akses ke modul terkait
                 const response = await fetch(`${GAS_URL}?action=getProgress&email=${encodeURIComponent(email)}`);
                 const result = await response.json();
+                
                 if (result.status === 'success') {
                     isEnrolled = true;
-                    renderSidebar();
+                    if (result.progress && result.progress !== "") {
+                        completedChapters = result.progress.split(',').map(Number);
+                    }
                 } else {
                     isEnrolled = false;
-                    renderSidebar();
                 }
             } catch (e) {
+                console.error("Gagal verifikasi status enrollment", e);
                 isEnrolled = false;
-                renderSidebar();
+            } finally {
+                renderSidebarAction();
+                renderSyllabusList();
             }
         }
 
+        // Pengecekan awal saat halaman dimuat
         if (rawSession) {
             session = JSON.parse(rawSession);
-            document.getElementById('nav-auth-container').innerHTML = `<a href="my-courses.html" class="px-6 py-2 bg-gray-100 dark:bg-gray-800 rounded-full font-bold">Dashboard</a>`;
-            checkEnrollmentStatus(session.email); // Cek hak akses ke backend
+            const now = new Date().getTime();
+            if (session.isLoggedIn && session.expiry && now <= session.expiry) {
+                // Update Navbar untuk user yang login
+                document.getElementById('nav-auth-container').innerHTML = `<a href="my-courses.html" class="px-5 py-2.5 bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 font-bold rounded-full hover:bg-primary hover:text-white transition-colors text-sm shadow-sm"><i class="fa-solid fa-users mr-1.5"></i> Dashboard</a>`;
+                document.getElementById('mobile-auth-container').innerHTML = `<a href="my-courses.html" class="block w-full text-center py-3.5 rounded-full text-white bg-primary font-bold hover:bg-primaryHover transition-colors shadow-md"><i class="fa-solid fa-users mr-1.5"></i> Dashboard Belajar</a>`;
+                
+                checkEnrollmentStatus(session.email);
+            } else {
+                localStorage.removeItem('neokademi_user');
+                session = null;
+                renderSidebarAction();
+                renderSyllabusList();
+            }
         } else {
-            renderSidebar(); // Tamu
+            renderSidebarAction(); // Eksekusi jika Tamu
+            renderSyllabusList();
         }
 
-        function renderSidebar() {
+        // --- Render Tombol Sidebar Dinamis ---
+        function renderSidebarAction() {
             const btnContainer = document.getElementById('sidebar-action-buttons');
             
             if (!session) {
-                // TAMU (BELUM LOGIN)
+                // STATUS 1: TAMU (BELUM LOGIN)
                 btnContainer.innerHTML = `
-                    <div class="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl mb-4 border border-blue-100 dark:border-blue-800 text-center">
-                        <p class="text-sm font-semibold text-blue-800 dark:text-blue-300">Login untuk mendaftar kelas ini</p>
+                    <div class="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl mb-4 border border-blue-100 dark:border-blue-800 text-center">
+                        <p class="text-sm font-semibold text-blue-800 dark:text-blue-300">Login untuk mengakses kelas ini</p>
                     </div>
-                    <a href="login.html?redirect=detail.html?modul=${modulKey}" class="w-full flex items-center justify-center py-4 bg-primary text-white font-bold rounded-xl shadow-lg">Login / Daftar Akun</a>
+                    <a href="login.html?redirect=detail.html?modul=${modulKey}" class="w-full flex items-center justify-center py-3.5 bg-primary text-white font-bold rounded-xl shadow-lg hover:bg-primaryHover transition-all">Login / Daftar Akun</a>
                 `;
             } else if (!isEnrolled) {
-                // LOGIN, TAPI BELUM PUNYA MODUL (MUNCULKAN REDEEM DI SINI)
+                // STATUS 2: LOGIN TAPI BELUM ENROLL / BELI
                 btnContainer.innerHTML = `
-                    <a href="${data.checkoutLink}" target="_blank" class="w-full flex items-center justify-center py-4 bg-primary text-white font-bold rounded-xl shadow-lg hover:-translate-y-1 transition-all">
-                        <i class="fa-solid fa-cart-shopping mr-2"></i> Beli Kelas (Lynk.id)
+                    <a href="${data.checkoutLink}" target="_blank" class="w-full flex items-center justify-center py-4 bg-primary text-white font-bold rounded-xl shadow-lg hover:-translate-y-1 hover:bg-primaryHover transition-all">
+                        <i class="fa-solid fa-cart-shopping mr-2"></i> Enroll Sekarang
                     </a>
                     
-                    <div class="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800">
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Punya Kode Lisensi?</p>
+                    <div class="mt-6 pt-5 border-t border-gray-100 dark:border-gray-800">
+                        <p class="text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3">Punya Kode Lisensi?</p>
                         <form id="redeem-form" class="space-y-3">
-                            <input type="text" id="passkey-input" required class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-darkBg rounded-xl text-sm font-mono font-bold uppercase" placeholder="LNX-XXXXXX">
-                            <button type="submit" id="btn-redeem" class="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-xl">Aktivasi Kelas</button>
+                            <input type="text" id="passkey-input" required class="w-full px-4 py-3 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-darkBg rounded-xl text-sm font-mono font-bold uppercase focus:ring-2 focus:ring-primary/50 outline-none transition-colors" placeholder="LNX-XXXXXX">
+                            <button type="submit" id="btn-redeem" class="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-xl hover:opacity-90 transition-opacity shadow-sm">Aktivasi Kelas</button>
                             <p id="redeem-msg" class="text-xs text-center mt-2 font-medium"></p>
                         </form>
                     </div>
                 `;
 
-                // Logic Form Redeem di Detail Page
+                // Logika Submit Form Redeem Lisensi
                 document.getElementById('redeem-form').addEventListener('submit', async (e) => {
                     e.preventDefault();
                     const passkey = document.getElementById('passkey-input').value.trim();
@@ -172,26 +405,141 @@
                     } catch (error) {
                         msg.textContent = "Koneksi terputus.";
                         btnRedeem.disabled = false;
+                        btnRedeem.textContent = "Aktivasi Kelas";
                     }
                 });
 
             } else {
-                // LOGIN & SUDAH PUNYA MODUL
-                btnContainer.innerHTML = `
-                    <div class="text-center mb-3">
-                        <span class="text-emerald-500 font-bold text-[14px]"><i class="fa-solid fa-circle-check"></i> Modul Terbuka</span>
-                    </div>
-                    <button onclick="lanjutBelajar()" class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-xl shadow-lg">
-                        Masuk Ruang Kelas <i class="fa-solid fa-arrow-right ml-2"></i>
-                    </button>
-                `;
+                // STATUS 3: LOGIN & SUDAH ENROLL (Continue / Selesai)
+                const isCompleted = completedChapters.length >= data.syllabus.length;
+
+                if (!isCompleted) {
+                    btnContainer.innerHTML = `
+                        <div class="text-center mb-3">
+                            <span class="text-gray-500 font-medium text-[14px]">Status: In Progress</span>
+                        </div>
+                        <button onclick="lanjutBelajar()" class="w-full py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-xl shadow-lg hover:opacity-90 transition-opacity flex justify-center items-center gap-2">
+                            Continue <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    `;
+                } else {
+                    btnContainer.innerHTML = `
+                        <div class="text-center mb-3">
+                            <span class="text-emerald-500 font-bold text-[14px]"><i class="fa-solid fa-certificate"></i> Lulus Ujian</span>
+                        </div>
+                        <button onclick="lanjutBelajar()" class="w-full py-3.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-bold rounded-xl shadow-md mb-3 hover:opacity-90 transition-opacity">
+                            Review Materi
+                        </button>
+                        <button onclick="alert('Sertifikat dapat dilihat di Dashboard Materi Anda.'); window.location.href='materi.html';" class="w-full py-3 bg-white dark:bg-darkBg border border-primary text-primary font-bold rounded-xl hover:bg-blue-50 dark:hover:bg-primary/10 transition-colors">
+                            Lihat Sertifikat
+                        </button>
+                    `;
+                }
             }
+        }
+
+        // --- Render Silabus Premium Dinamis ---
+        function renderSyllabusList() {
+            const syllabusContainer = document.getElementById('detail-syllabus');
+            syllabusContainer.innerHTML = ''; // Kosongkan sebelum render ulang
+
+            data.syllabus.forEach((item, index) => {
+                const chapterId = index + 1; 
+                const isChapterDone = isEnrolled && completedChapters.includes(chapterId);
+                
+                const li = document.createElement('li');
+                li.className = "group hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer";
+                
+                let iconHtml = '';
+                let textClass = 'text-gray-600 dark:text-gray-400 group-hover:text-primary transition-colors';
+
+                if (isChapterDone) {
+                    iconHtml = `
+                        <div class="w-6 h-6 rounded-full flex items-center justify-center bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-500">
+                            <i class="fa-solid fa-check text-[10px] text-emerald-600 dark:text-emerald-400"></i>
+                        </div>
+                    `;
+                    textClass = 'text-gray-900 dark:text-white font-semibold';
+                } else {
+                    iconHtml = `
+                        <div class="w-6 h-6 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center group-hover:border-primary transition-colors">
+                            <i class="fa-solid fa-play text-[8px] text-gray-300 dark:text-gray-600 group-hover:text-primary ml-0.5"></i>
+                        </div>
+                    `;
+                }
+
+                li.innerHTML = `
+                    <a href="${isEnrolled ? 'materi.html' : '#'}" class="flex items-center px-6 py-4" onclick="${!isEnrolled ? 'event.preventDefault(); alert(\\\'Silakan Enroll atau Redeem Passkey terlebih dahulu untuk mengakses kelas ini.\\\');' : ''}">
+                        <div class="flex-shrink-0 mr-4">
+                            ${iconHtml}
+                        </div>
+                        <div class="flex-1">
+                            <span class="${textClass} text-sm">
+                                ${index + 1}. ${item}
+                            </span>
+                        </div>
+                    </a>
+                `;
+                syllabusContainer.appendChild(li);
+            });
         }
 
         function lanjutBelajar() {
             session.modul = modulKey;
             localStorage.setItem('neokademi_user', JSON.stringify(session));
             window.location.href = 'materi.html';
+        }
+
+        // --- Pilled Smooth Sliding Dark Mode Toggle Logic ---
+        const themeToggles = document.querySelectorAll('.theme-toggle');
+        const html = document.documentElement;
+
+        function applyTheme(isDark) {
+            if (isDark) {
+                html.classList.add('dark');
+            } else {
+                html.classList.remove('dark');
+            }
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            applyTheme(true);
+        } else {
+            applyTheme(false);
+        }
+
+        themeToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const isDark = !html.classList.contains('dark');
+                applyTheme(isDark);
+            });
+        });
+
+        // --- Mobile Menu Toggle ---
+        let isMobileMenuOpen = false;
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
+            
+            isMobileMenuOpen = !isMobileMenuOpen;
+            if (isMobileMenuOpen) {
+                mobileBackdrop.classList.remove('hidden');
+                setTimeout(() => {
+                    mobileBackdrop.classList.remove('opacity-0');
+                    mobileBackdrop.classList.add('opacity-100');
+                    mobileMenu.classList.remove('translate-x-full');
+                    mobileMenu.classList.add('translate-x-0');
+                }, 10);
+                document.body.style.overflow = 'hidden';
+            } else {
+                mobileBackdrop.classList.remove('opacity-100');
+                mobileBackdrop.classList.add('opacity-0');
+                mobileMenu.classList.remove('translate-x-0');
+                mobileMenu.classList.add('translate-x-full');
+                setTimeout(() => { mobileBackdrop.classList.add('hidden'); }, 300);
+                document.body.style.overflow = '';
+            }
         }
     </script>
 </body>
