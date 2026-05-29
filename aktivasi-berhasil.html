@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aktivasi Berhasil | Neokademi</title>
+    
+    <script>
+        const sessionData = localStorage.getItem('neokademi_user');
+        if (!sessionData) {
+            window.location.replace('login.html');
+        } else {
+            const session = JSON.parse(sessionData);
+            const now = new Date().getTime();
+            if (!session.isLoggedIn || !session.expiry || now > session.expiry) {
+                localStorage.removeItem('neokademi_user');
+                window.location.replace('login.html');
+            }
+        }
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5', 
+                        primaryHover: '#4338CA',
+                        darkBg: '#0f172a',
+                        darkCard: '#1e293b'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; overflow: hidden; }
+        
+        @keyframes scale-in-bounce {
+            0% { transform: scale(0); opacity: 0; }
+            60% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-scale-in { animation: scale-in-bounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+        
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up { animation: fade-in-up 0.5s ease-out 0.3s forwards; opacity: 0; }
+    </style>
+</head>
+<body class="bg-[#FAFAFA] text-gray-800 dark:bg-darkBg dark:text-gray-100 antialiased min-h-screen flex items-center justify-center relative">
+
+    <nav class="absolute top-0 w-full z-50 bg-transparent border-b border-gray-200/50 dark:border-gray-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-center md:justify-between h-20 items-center">
+                 <a href="index.html" class="flex items-center">
+                    <img src="assets/img/Neokademi.png" alt="Logo Neokademi" class="w-10 h-10 object-contain mr-3" onerror="this.src='https://ui-avatars.com/api/?name=NK&background=4F46E5&color=fff'">
+                    <span class="font-extrabold text-2xl tracking-tight text-gray-900 dark:text-white">Neokademi</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-5">
+                    <button id="theme-toggle" class="text-gray-400 hover:text-amber-500 dark:text-gray-500 dark:hover:text-amber-400 focus:outline-none transition-colors">
+                        <i id="theme-icon" class="fa-solid fa-moon text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/10 dark:bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
+
+    <main class="relative z-10 w-full max-w-lg px-4">
+        <div class="bg-white dark:bg-darkCard p-10 md:p-12 rounded-[2.5rem] shadow-2xl dark:shadow-none border border-gray-100 dark:border-gray-800 text-center flex flex-col items-center">
+            
+            <div class="w-24 h-24 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-500 rounded-full flex items-center justify-center text-4xl mb-6 shadow-inner animate-scale-in border border-emerald-100 dark:border-emerald-800/50">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <div class="animate-fade-in-up w-full">
+                <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-3">Aktivasi Berhasil!</h1>
+                <p class="text-gray-500 dark:text-gray-400 text-base leading-relaxed mb-8">
+                    Modul <strong id="modul-name" class="text-gray-900 dark:text-gray-200">Premium E-Course</strong> telah ditambahkan ke akun Anda. Anda sekarang memiliki akses penuh selamanya.
+                </p>
+
+                <div class="space-y-3 w-full">
+                    <button onclick="goToMateri()" class="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primaryHover transition-transform hover:-translate-y-1 shadow-lg shadow-primary/30 flex items-center justify-center gap-2">
+                        Mulai Belajar Sekarang <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <a href="my-courses.html" class="w-full block py-3.5 bg-gray-50 dark:bg-[#0B1120] text-gray-600 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 border border-gray-200 dark:border-gray-700 transition-colors">
+                        Kembali ke Dashboard
+                    </a>
+                </div>
+
+                <p class="mt-6 text-xs font-medium text-gray-400 dark:text-gray-500">
+                    Mengarahkan ke ruang kelas dalam <span id="countdown" class="text-primary font-bold">5</span> detik...
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // --- Konfigurasi Dictionary Modul ---
+        const moduleDictionary = {
+            "linux": "Linux System Administration",
+            "cloud": "Cloud Modern Workspace",
+            "digitalmarketing": "Digital Marketing Mastery"
+        };
+
+        // Ambil parameter URL (misal: ?modul=linux)
+        const urlParams = new URLSearchParams(window.location.search);
+        const modulParam = urlParams.get('modul');
+        
+        let targetModul = 'linux'; // Default fallback
+
+        // Jika modul ada di parameter, tampilkan namanya dan set ke sesi
+        if (modulParam && moduleDictionary[modulParam]) {
+            document.getElementById('modul-name').textContent = moduleDictionary[modulParam];
+            targetModul = modulParam;
+            
+            // Perbarui modul aktif di localStorage agar saat di-redirect langsung masuk ke modul tersebut
+            const session = JSON.parse(localStorage.getItem('neokademi_user'));
+            session.modul = targetModul;
+            localStorage.setItem('neokademi_user', JSON.stringify(session));
+        }
+
+        // --- Efek Confetti ---
+        function fireConfetti() {
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                var particleCount = 50 * (timeLeft / duration);
+                
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        // --- Navigasi & Auto Redirect ---
+        function goToMateri() {
+            window.location.href = 'materi.html';
+        }
+
+        let timeLeft = 5;
+        const countdownEl = document.getElementById('countdown');
+        
+        const timer = setInterval(() => {
+            timeLeft--;
+            countdownEl.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                goToMateri();
+            }
+        }, 1000);
+
+        // --- Dark Mode Logic ---
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const html = document.documentElement;
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+            if(themeIcon) themeIcon.className = "fa-solid fa-sun text-xl";
+        } else {
+            html.classList.remove('dark');
+            if(themeIcon) themeIcon.className = "fa-solid fa-moon text-xl";
+        }
+
+        if(themeToggleBtn) {
+            themeToggleBtn.addEventListener('click', () => {
+                html.classList.toggle('dark');
+                const isDark = html.classList.contains('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+                themeIcon.className = `fa-solid ${isDark ? 'fa-sun' : 'fa-moon'} text-xl transition-transform duration-300 rotate-0 hover:rotate-90`;
+            });
+        }
+
+        // Trigger animasi saat DOM siap
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(fireConfetti, 300); // Beri sedikit delay agar page render selesai
+        });
+
+    </script>
+</body>
+</html>
