@@ -12,7 +12,7 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#4F46E5', /* Indigo ala BWA */
+                        primary: '#4F46E5', 
                         primaryHover: '#4338CA',
                         secondary: '#F3F4F6',
                         darkBg: '#0f172a',
@@ -36,19 +36,14 @@
         }
         .animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
 
-        /* Custom Dropdown Hover */
-        .group:hover .group-hover\:block { display: block; }
-
-        /* Animasi Ikon Dark Mode */
         .icon-spin-transition {
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
         }
 
-        /* Kustomisasi Select Form agar rapi di semua browser */
-        select {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
+        /* Hilangkan icon mata bawaan browser pada input password */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear {
+            display: none;
         }
     </style>
 </head>
@@ -57,99 +52,31 @@
     <nav class="sticky top-0 z-50 bg-white/90 dark:bg-darkBg/90 backdrop-blur-lg border-b border-gray-100 dark:border-gray-800 transition-colors">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
-                 <a href="#" class="flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <img src="assets/img/Neokademi.png" alt="Logo Neokademi" class="w-10 h-10 object-contain mr-3">
+                 <a href="index.html" class="flex items-center cursor-pointer">
+                    <img src="assets/img/Neokademi.png" alt="Logo Neokademi" class="w-10 h-10 object-contain mr-3" onerror="this.src='https://ui-avatars.com/api/?name=NK&background=4F46E5&color=fff'">
                     <span class="font-extrabold text-2xl tracking-tight text-gray-900 dark:text-white">Neokademi</span>
                 </a>
-                
-                <div class="hidden md:flex items-center space-x-8">
-                    <div class="flex space-x-8 items-center">
-                        <a href="index.html" class="text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary font-medium transition-colors">Beranda</a>
-                        
-                        <div class="relative group py-8">
-                            <button class="flex items-center text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary font-medium transition-colors focus:outline-none">
-                                Kelas <i class="fa-solid fa-chevron-down ml-1.5 text-[10px] transition-transform group-hover:rotate-180 mt-0.5"></i>
-                            </button>
-                            <div class="absolute right-0 md:left-0 mt-2 w-64 bg-white dark:bg-darkCard rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-left z-50 overflow-hidden">
-                                <div class="py-2">
-                                    <a href="detail.html?modul=linux" class="block px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                        <div class="font-semibold text-gray-900 dark:text-white">Linux Administration</div>
-                                        <p class="text-xs text-gray-500 mt-0.5">Kuasai server open-source</p>
-                                    </a>
-                                    <a href="detail.html?modul=cloud" class="block px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                        <div class="font-semibold text-gray-900 dark:text-white">Cloud Modern Workspace</div>
-                                        <p class="text-xs text-gray-500 mt-0.5">Office 365 & Google Workspace</p>
-                                    </a>
-                                    <a href="detail.html?modul=digitalmarketing" class="block px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                                        <div class="font-semibold text-gray-900 dark:text-white">Digital Marketing</div>
-                                        <p class="text-xs text-gray-500 mt-0.5">Strategi iklan & optimasi konversi</p>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <a href="index.html#contact-section" class="text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary font-medium transition-colors">Hubungi Kami</a>
-                    </div>
-
-                    <div class="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
-
-                    <div class="flex items-center space-x-5">
-                        <button id="theme-toggle" class="text-gray-400 hover:text-amber-500 dark:text-gray-500 dark:hover:text-amber-400 focus:outline-none flex items-center justify-center transition-colors">
-                            <i id="theme-icon" class="fa-solid fa-moon text-[1.3rem] icon-spin-transition"></i>
-                        </button>
-                        <a href="login.html" class="px-6 py-2.5 rounded-full text-white font-semibold border border-primary bg-primary hover:bg-primaryHover transition-all shadow-md shadow-primary/20">
-                            Masuk Kelas
-                        </a>
-                    </div>
-                </div>
-
-                <div class="md:hidden flex items-center space-x-4">
-                    <button id="theme-toggle-mobile" class="text-gray-400 hover:text-amber-500 dark:text-gray-500 dark:hover:text-amber-400 focus:outline-none transition-colors">
-                        <i id="theme-icon-mobile" class="fa-solid fa-moon text-xl icon-spin-transition"></i>
-                    </button>
-                    <button onclick="toggleMobileMenu()" class="text-gray-600 dark:text-gray-300 hover:text-primary focus:outline-none">
-                        <i class="fa-solid fa-bars text-2xl"></i>
+                <div class="flex items-center space-x-5">
+                    <button id="theme-toggle" class="text-gray-400 hover:text-amber-500 dark:text-gray-500 dark:hover:text-amber-400 focus:outline-none flex items-center justify-center transition-colors">
+                        <i id="theme-icon" class="fa-solid fa-moon text-[1.3rem] icon-spin-transition"></i>
                     </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div id="mobile-menu-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-black/60 z-50 hidden opacity-0 transition-opacity duration-300"></div>
-    <div id="mobile-menu" class="fixed top-0 right-0 z-[60] w-72 h-full bg-white dark:bg-darkCard shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out md:hidden flex flex-col">
-        <div class="px-6 h-20 flex justify-between items-center border-b border-gray-100 dark:border-gray-800">
-            <span class="font-bold text-xl text-gray-900 dark:text-white">Menu</span>
-            <button onclick="toggleMobileMenu()" class="text-gray-400 hover:text-red-500 transition-colors p-2">
-                <i class="fa-solid fa-xmark text-2xl"></i>
-            </button>
-        </div>
-        <div class="flex-grow px-6 py-8 space-y-6 overflow-y-auto">
-            <a href="index.html" class="block text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors">Beranda</a>
-            
-            <div>
-                <p class="text-lg font-medium text-gray-700 dark:text-gray-200 mb-3">Kelas Premium</p>
-                <div class="space-y-3 pl-4 border-l-2 border-gray-100 dark:border-gray-800">
-                    <a href="detail.html?modul=linux" class="block text-gray-600 dark:text-gray-400 hover:text-primary">Linux Administration</a>
-                    <a href="detail.html?modul=cloud" class="block text-gray-600 dark:text-gray-400 hover:text-primary">Cloud Workspace</a>
-                    <a href="detail.html?modul=digitalmarketing" class="block text-gray-600 dark:text-gray-400 hover:text-primary">Digital Marketing</a>
-                </div>
-            </div>
-
-            <a href="index.html#contact-section" class="block text-lg font-medium text-gray-700 dark:text-gray-200 hover:text-primary transition-colors">Hubungi Kami</a>
-        </div>
-    </div>
-
     <main class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 dark:bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
         
         <div class="max-w-md w-full space-y-8 bg-white dark:bg-darkCard p-8 md:p-12 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none border border-gray-100 dark:border-gray-800 relative z-10 animate-fade-in-up">
+            
             <div class="text-center">
                 <div class="mx-auto h-16 w-16 bg-blue-50 dark:bg-blue-900/30 text-primary dark:text-blue-400 flex items-center justify-center rounded-2xl mb-5 shadow-inner">
                     <i class="fa-solid fa-shield-halved text-2xl"></i>
                 </div>
-                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Akses Kelas</h2>
-                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400 px-4">
-                    Gunakan email pendaftaran dan passkey rahasia yang Anda terima.
+                <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white tracking-tight">Login Akun</h2>
+                <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    Masukkan email dan password untuk masuk ke ruang kelas Anda.
                 </p>
             </div>
             
@@ -159,23 +86,6 @@
                 </div>
 
                 <div class="space-y-4">
-                    <div id="modul-select-wrapper" class="hidden">
-                        <label for="modul-select" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">Pilih Kelas Modul</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fa-solid fa-book-open text-gray-400"></i>
-                            </div>
-                            <select id="modul-select" name="modul" class="appearance-none rounded-xl relative block w-full px-4 py-3.5 pl-11 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white bg-gray-50 dark:bg-darkBg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary sm:text-sm transition-colors cursor-pointer font-medium">
-                                <option value="linux">Linux System Administration</option>
-                                <option value="cloud">Cloud Modern Workspace</option>
-                                <option value="digitalmarketing">Digital Marketing Mastery</option>
-                            </select>
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                                <i class="fa-solid fa-chevron-down text-gray-400 text-xs"></i>
-                            </div>
-                        </div>
-                    </div>
-
                     <div>
                         <label for="email" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">Alamat Email</label>
                         <div class="relative">
@@ -187,14 +97,22 @@
                     </div>
 
                     <div>
-                        <label for="passkey" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">Passkey / Serial Code</label>
+                        <label for="password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1.5 ml-1">Password</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fa-solid fa-key text-gray-400"></i>
+                                <i class="fa-solid fa-lock text-gray-400"></i>
                             </div>
-                            <input id="passkey" name="passkey" type="text" required class="appearance-none rounded-xl relative block w-full px-4 py-3.5 pl-11 border border-gray-200 dark:border-gray-700 placeholder-gray-400 text-gray-900 dark:text-white bg-gray-50 dark:bg-darkBg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary sm:text-sm transition-colors uppercase font-mono font-medium tracking-widest" placeholder="NEO-XXXXXX">
+                            <input id="password" name="password" type="password" required class="appearance-none rounded-xl relative block w-full px-4 py-3.5 pl-11 pr-10 border border-gray-200 dark:border-gray-700 placeholder-gray-400 text-gray-900 dark:text-white bg-gray-50 dark:bg-darkBg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary sm:text-sm transition-colors font-medium" placeholder="••••••••">
+                            
+                            <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-primary transition-colors focus:outline-none">
+                                <i id="eye-icon" class="fa-regular fa-eye"></i>
+                            </button>
                         </div>
                     </div>
+                </div>
+
+                <div class="flex items-center justify-end">
+                    <a href="#" class="text-sm font-semibold text-primary hover:text-primaryHover transition-colors">Lupa Password?</a>
                 </div>
 
                 <div class="pt-2">
@@ -206,7 +124,9 @@
             </form>
             
             <div class="text-center pt-2">
-                <p class="text-sm text-gray-500 dark:text-gray-400">Belum memiliki akses kelas? <br class="sm:hidden"><a id="buy-link" href="kelas-list.html" class="font-bold text-primary hover:text-primaryHover ml-1 transition-colors underline decoration-2 underline-offset-2 decoration-primary/30">Beli modul di sini</a></p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Belum memiliki akun? <br class="sm:hidden">
+                    <a id="register-link" href="register.html" class="font-bold text-primary hover:text-primaryHover ml-1 transition-colors underline decoration-2 underline-offset-2 decoration-primary/30">Daftar sekarang gratis</a>
+                </p>
             </div>
         </div>
     </main>
@@ -223,27 +143,39 @@
         // Set Year in Footer
         document.getElementById('year').textContent = new Date().getFullYear();
 
+        // --- Toggle Password Visibility ---
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eye-icon');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
         // --- Dark Mode Logic ---
         const themeToggleBtn = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
-        const themeToggleBtnMobile = document.getElementById('theme-toggle-mobile');
-        const themeIconMobile = document.getElementById('theme-icon-mobile');
+        const html = document.documentElement;
 
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
+            html.classList.add('dark');
             updateIcons('dark');
         } else {
-            document.documentElement.classList.remove('dark');
+            html.classList.remove('dark');
             updateIcons('light');
         }
 
         function toggleTheme() {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
                 localStorage.theme = 'light';
                 updateIcons('light');
             } else {
-                document.documentElement.classList.add('dark');
+                html.classList.add('dark');
                 localStorage.theme = 'dark';
                 updateIcons('dark');
             }
@@ -252,65 +184,36 @@
         function updateIcons(theme) {
             const iconClassNew = theme === 'dark' ? 'fa-sun' : 'fa-moon';
             const iconClassOld = theme === 'dark' ? 'fa-moon' : 'fa-sun';
-            
             themeIcon.classList.add('rotate-180');
-            themeIconMobile.classList.add('rotate-180');
-            
             setTimeout(() => {
                 themeIcon.classList.replace(iconClassOld, iconClassNew);
-                themeIconMobile.classList.replace(iconClassOld, iconClassNew);
                 themeIcon.classList.remove('rotate-180');
-                themeIconMobile.classList.remove('rotate-180');
             }, 150);
         }
 
-        themeToggleBtn.addEventListener('click', toggleTheme);
-        themeToggleBtnMobile.addEventListener('click', toggleTheme);
+        if(themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
 
-        // --- Mobile Menu Logic ---
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileBackdrop = document.getElementById('mobile-menu-backdrop');
-        let isMobileMenuOpen = false;
+        // --- Routing Logic (Menangkap Parameter Redirect) ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectParam = urlParams.get('redirect');
+        
+        // Teruskan parameter ke halaman register jika user klik "Daftar sekarang"
+        if (redirectParam) {
+            document.getElementById('register-link').href = 'register.html?redirect=' + encodeURIComponent(redirectParam);
+        }
 
-        function toggleMobileMenu() {
-            isMobileMenuOpen = !isMobileMenuOpen;
-            if (isMobileMenuOpen) {
-                mobileBackdrop.classList.remove('hidden');
-                setTimeout(() => {
-                    mobileBackdrop.classList.remove('opacity-0');
-                    mobileBackdrop.classList.add('opacity-100');
-                    mobileMenu.classList.remove('translate-x-full');
-                    mobileMenu.classList.add('translate-x-0');
-                }, 10);
-                document.body.style.overflow = 'hidden';
+        // --- Cek Sesi (Auto-Login) ---
+        // Jika user sudah login, langsung lempar ke my-courses.html atau halaman redirect
+        const sessionData = localStorage.getItem('neokademi_user');
+        if (sessionData) {
+            const session = JSON.parse(sessionData);
+            const now = new Date().getTime();
+            if (session.isLoggedIn && session.expiry && now <= session.expiry) {
+                window.location.replace(redirectParam ? redirectParam : 'my-courses.html');
             } else {
-                mobileBackdrop.classList.remove('opacity-100');
-                mobileBackdrop.classList.add('opacity-0');
-                mobileMenu.classList.remove('translate-x-0');
-                mobileMenu.classList.add('translate-x-full');
-                setTimeout(() => { mobileBackdrop.classList.add('hidden'); }, 300);
-                document.body.style.overflow = '';
+                localStorage.removeItem('neokademi_user'); // Bersihkan jika kadaluarsa
             }
         }
-
-        // --- LOGIKA SKENARIO SUMBER HALAMAN (DARI DETAIL / DARI INDEX) ---
-        const urlParams = new URLSearchParams(window.location.search);
-        const paramModul = urlParams.get('modul');
-        
-        const wrapperSelect = document.getElementById('modul-select-wrapper');
-        const selectElement = document.getElementById('modul-select');
-        const buyLink = document.getElementById('buy-link');
-
-        if (paramModul) {
-            // Skenario 1: Berasal dari detail.html?modul=xxx
-            wrapperSelect.classList.add('hidden'); // Sembunyikan Form Pilihan Kelas
-            buyLink.href = 'detail.html?modul=' + paramModul; // Balik ke detail kelas terkait
-        } else {
-            // Skenario 2: Berasal dari index.html atau kelas-list.html
-            wrapperSelect.classList.remove('hidden'); // Munculkan Form Pilihan Kelas
-            buyLink.href = 'kelas-list.html'; // Arahkan ke Katalog Utama
-        }
-
 
         // --- Login Form Fetch Logic ---
         const loginForm = document.getElementById('login-form');
@@ -324,7 +227,7 @@
         const GAS_URL = 'https://script.google.com/macros/s/AKfycbyJcarKrJQUYKMK81f531gpgwY8UVQxSVz6NExABGst1fnprd8DnCdhIH0VpQzeDg/exec'; 
 
         function showAlert(message, type) {
-            alertBox.classList.remove('hidden', 'bg-red-50', 'text-red-600', 'border-red-200', 'bg-green-50', 'text-green-600', 'border-green-200');
+            alertBox.classList.remove('hidden', 'bg-red-50', 'text-red-600', 'border-red-200', 'bg-green-50', 'text-green-600', 'border-green-200', 'border');
             alertBox.classList.add('border');
             
             if(type === 'error') {
@@ -340,7 +243,7 @@
             e.preventDefault();
             
             const email = document.getElementById('email').value.trim();
-            const passkey = document.getElementById('passkey').value.trim().toUpperCase();
+            const password = document.getElementById('password').value;
 
             btnSubmit.disabled = true;
             btnText.textContent = 'Memverifikasi Akses...';
@@ -348,8 +251,15 @@
             alertBox.classList.add('hidden');
 
             try {
-                const response = await fetch(`${GAS_URL}?action=login&email=${encodeURIComponent(email)}&passkey=${encodeURIComponent(passkey)}`, {
-                    method: 'GET',
+                // Menembak endpoint action=login ke GAS
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'login',
+                        email: email,
+                        password: password
+                    })
                 });
 
                 const result = await response.json();
@@ -357,26 +267,29 @@
                 if (result.status === 'success') {
                     showAlert('Verifikasi berhasil! Menyiapkan workspace...', 'success');
                     
-                    // Tentukan modul akhir: Dari Parameter URL atau dari Pilihan Dropdown
-                    const finalModul = paramModul ? paramModul : selectElement.value;
-
-                    // Logika Sesi 3 Jam
-                    const jam = 3;
+                    // Set Sesi Login (Berlaku 12 Jam untuk kemudahan user)
+                    const jam = 12;
                     const expiryTime = new Date().getTime() + (jam * 60 * 60 * 1000); 
 
                     localStorage.setItem('neokademi_user', JSON.stringify({
                         email: email,
-                        modul: finalModul, 
+                        name: result.name || email.split('@')[0], // Simpan nama jika dikembalikan dari backend
                         isLoggedIn: true,
-                        expiry: expiryTime
+                        expiry: expiryTime,
+                        modul: 'linux' // Default fallback
                     }));
 
+                    // Redirect cerdas
                     setTimeout(() => {
-                        window.location.href = 'materi.html';
+                        if (redirectParam) {
+                            window.location.href = redirectParam;
+                        } else {
+                            window.location.href = 'my-courses.html';
+                        }
                     }, 1500);
 
                 } else {
-                    showAlert('Email atau Passkey tidak valid.', 'error');
+                    showAlert(result.message || 'Email atau Password salah.', 'error');
                     btnSubmit.disabled = false;
                     btnText.textContent = 'Masuk Workspace';
                     btnSpinner.classList.add('hidden');
@@ -384,7 +297,7 @@
 
             } catch (error) {
                 console.error('Error:', error);
-                showAlert('Gangguan koneksi server. Pastikan fungsi doGet sudah aktif.', 'error');
+                showAlert('Gangguan koneksi ke server database.', 'error');
                 btnSubmit.disabled = false;
                 btnText.textContent = 'Masuk Workspace';
                 btnSpinner.classList.add('hidden');
