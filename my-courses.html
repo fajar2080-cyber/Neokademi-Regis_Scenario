@@ -238,14 +238,16 @@
             }
         };
 
-        // URL GAS BACKEND (Ganti dengan URL Deployment Anda yang baru)
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyJcarKrJQUYKMK81f531gpgwY8UVQxSVz6NExABGst1fnprd8DnCdhIH0VpQzeDg/exec'; 
+        // --- PERBAIKAN FATAL: MENGGUNAKAN URL GAS TERBARU ---
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzQR5-8Y5aDsnn2cO5zk4od7Ple2-YBb2CSBPR2b2dHchy89xwtoioV7v_6q4A7fkgslQ/exec'; 
 
-        // --- Fetch Daftar Modul User ---
+        // --- Fetch Daftar Modul User (Dengan Penembus Cache) ---
         async function fetchMyCourses() {
             const container = document.getElementById('courses-container');
             try {
-                const response = await fetch(`${GAS_URL}?action=get_my_courses&email=${encodeURIComponent(session.email)}`);
+                // Mencegah browser membaca cache lama
+                const cacheBuster = new Date().getTime(); 
+                const response = await fetch(`${GAS_URL}?action=get_my_courses&email=${encodeURIComponent(session.email)}&t=${cacheBuster}`);
                 const result = await response.json();
 
                 container.innerHTML = ''; // Hapus skeleton
