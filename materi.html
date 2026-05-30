@@ -305,7 +305,7 @@
         // ==============================================================
         // 1. BACKEND & DATA 
         // ==============================================================
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyJcarKrJQUYKMK81f531gpgwY8UVQxSVz6NExABGst1fnprd8DnCdhIH0VpQzeDg/exec'; // GANTI URL INI
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzQR5-8Y5aDsnn2cO5zk4od7Ple2-YBb2CSBPR2b2dHchy89xwtoioV7v_6q4A7fkgslQ/exec'; 
         const MIN_SCORE_PASS = 80;
 
         const courseData = {
@@ -340,7 +340,7 @@
             { q: "Perintah apa yang digunakan untuk menampilkan daftar isi direktori?", options: ["cd", "ls", "pwd", "mkdir"], ans: 1 },
             { q: "Angka berapa yang merepresentasikan hak akses penuh?", options: ["5", "6", "7", "4"], ans: 2 },
             { q: "Paket manager bawaan pada keluarga Debian adalah?", options: ["yum", "dnf", "apt", "pacman"], ans: 2 },
-            { q: "Port default yang digunakan oleh SSH adalah?", options: ["21", "22", "80", "443"], ans: 1 },
+            { q: "Port default yang digunakan oleh SSH Morris adalah?", options: ["21", "22", "80", "443"], ans: 1 },
             { q: "Bagaimana cara mengecek sisa storage yang dapat dibaca manusia?", options: ["df -h", "free -m", "ls -la", "top"], ans: 0 },
             { q: "Perintah untuk mematikan paksa proses ber-PID 1234 adalah?", options: ["stop 1234", "kill -9 1234", "end 1234", "systemctl kill"], ans: 1 },
             { q: "Web Server yang menangani koneksi tinggi dengan RAM rendah?", options: ["MySQL", "Apache", "Nginx", "Postfix"], ans: 2 },
@@ -424,13 +424,12 @@
                             localStorage.removeItem(quizAnswersKey);
                         }
                     } else { 
-                        // Jika backend menolak (status !== success), maka user di Kick-Out!
+                        // Jika backend menolak, maka user di Kick-Out!
                         alert("Akses Ditolak! Anda belum memiliki akses ke modul ini atau sesi tidak valid.");
                         window.location.replace("detail.html?modul=" + currentCourse);
                         return;
                     }
                 } catch(err) {
-                    // Jika koneksi gagal, jangan biarkan masuk menggunakan data sisa (Cache). Kick-out!
                     alert("Koneksi gagal saat memverifikasi hak akses. Pastikan internet stabil dan coba lagi.");
                     window.location.replace("detail.html?modul=" + currentCourse);
                     return;
@@ -457,17 +456,15 @@
             }
         }
 
+        // --- FIXED: MENEMBAK DATA DENGAN MODE 'NO-CORS' UNTUK BYPASS BLOKIR BROWSER ---
         function sendDataBeacon(action, dataValue, extraData = "") {
             const paramName = action === 'saveQuiz' ? 'score' : 'progress';
             let url = `${GAS_URL}?action=${action}&email=${encodeURIComponent(userEmail)}&${paramName}=${encodeURIComponent(dataValue)}&t=${new Date().getTime()}`;
             if(action === 'saveQuiz' && extraData !== "") url += `&answers=${encodeURIComponent(extraData)}`;
             
-            // MENGGUNAKAN FETCH API (Jalur Resmi & Ultra-Aman)
-            // Memastikan data progres benar-benar terkirim dan tidak diblokir browser
-            fetch(url, { method: 'GET' })
-                .then(response => response.json())
-                .then(data => console.log("System:", action, "berhasil disinkronisasi ke server."))
-                .catch(error => console.error("System: Gagal sinkronisasi data", error));
+            fetch(url, { method: 'GET', mode: 'no-cors' })
+                .then(() => console.log("System:", action, "Berhasil disinkronisasikan ke Server!"))
+                .catch(error => console.error("System: Gagal mengirim data", error));
         }
 
         function triggerBackgroundGeneration() {
@@ -1035,7 +1032,7 @@
             }
         }
 
-        // --- Pilled Smooth Sliding Dark Mode Toggle Logic ---
+        // --- Dark Mode System ---
         const themeToggles = document.querySelectorAll('.theme-toggle');
         const html = document.documentElement;
 
@@ -1085,16 +1082,12 @@
         document.getElementById('close-mobile-menu').onclick = toggleMobileNav;
 
         // --- BACK BUTTON BROWSER FIX ---
-        function setupBackNavigation() {
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeData();
             history.pushState({page: 'materi'}, null, location.href);
             window.addEventListener('popstate', function() {
                 location.replace("materi.html");
             });
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            initializeData();
-            setupBackNavigation();
         });
 
     </script>
