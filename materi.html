@@ -461,8 +461,13 @@
             const paramName = action === 'saveQuiz' ? 'score' : 'progress';
             let url = `${GAS_URL}?action=${action}&email=${encodeURIComponent(userEmail)}&${paramName}=${encodeURIComponent(dataValue)}&t=${new Date().getTime()}`;
             if(action === 'saveQuiz' && extraData !== "") url += `&answers=${encodeURIComponent(extraData)}`;
-            const beacon = new Image();
-            beacon.src = url;
+            
+            // MENGGUNAKAN FETCH API (Jalur Resmi & Ultra-Aman)
+            // Memastikan data progres benar-benar terkirim dan tidak diblokir browser
+            fetch(url, { method: 'GET' })
+                .then(response => response.json())
+                .then(data => console.log("System:", action, "berhasil disinkronisasi ke server."))
+                .catch(error => console.error("System: Gagal sinkronisasi data", error));
         }
 
         function triggerBackgroundGeneration() {
