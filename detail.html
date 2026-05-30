@@ -157,8 +157,9 @@
 
                     <div class="p-6">
                         <div id="sidebar-action-buttons" class="space-y-3 mb-6">
-                            <div class="flex justify-center items-center py-4 text-gray-400">
-                                <i class="fa-solid fa-circle-notch fa-spin text-2xl"></i>
+                            <div class="flex flex-col justify-center items-center py-4 text-gray-400">
+                                <i class="fa-solid fa-circle-notch fa-spin text-2xl mb-2"></i>
+                                <span class="text-xs">Memverifikasi Akses...</span>
                             </div>
                         </div>
 
@@ -319,35 +320,43 @@
         // --- VALIDASI HAK AKSES STRICT DARI SERVER ---
         const rawSession = localStorage.getItem('neokademi_user');
         let session = null;
-        let isEnrolled = false;
+        let isEnrolled = false; // Default harus false.
         let completedChapters = [];
 
-        async function checkEnrollmentStatus(email) {
+        async function verifyEnrollmentStrict(email) {
             try {
-                // Fetch status kepemilikan kelas langsung dari Server
+                // Fetch status kepemilikan kelas langsung dari Server (Tanpa membaca localStorage)
                 const response = await fetch(`${GAS_URL}?action=getProgress&email=${encodeURIComponent(email)}`);
                 const result = await response.json();
                 
-                // Jika backend menjawab 'success', artinya email ada di Tab Progress terkait
+                // Jika backend menjawab 'success', artinya email BENAR-BENAR ADA di Tab Progress
                 if (result.status === 'success') {
                     isEnrolled = true;
                     if (result.progress && result.progress !== "") {
                         completedChapters = result.progress.split(',').map(Number);
+                    } else {
+                        completedChapters = [];
                     }
                 } else {
-                    isEnrolled = false; // Akses ditolak oleh database
+                    isEnrolled = false; // Akses ditolak secara eksplisit oleh database
+                    completedChapters = [];
                 }
             } catch (e) {
-                isEnrolled = false;
+                console.error("Gagal terhubung ke database.", e);
+                isEnrolled = false; // Jika error jaringan, tolak akses demi keamanan
+                completedChapters = [];
             } finally {
+                // UI Dilarang di-render sebelum proses verify selesai!
                 renderSidebarAction();
                 renderSyllabusList();
             }
         }
 
+        // --- SISTEM AWAL (BOOT) ---
         if (rawSession) {
             session = JSON.parse(rawSession);
             const now = new Date().getTime();
+            
             if (session.isLoggedIn && session.expiry && now <= session.expiry) {
                 // Update UI Navbar karena user login
                 document.getElementById('nav-auth-container').innerHTML = `
@@ -357,8 +366,8 @@
                     <a href="my-courses.html" class="block w-full text-center py-3.5 rounded-full text-white bg-primary font-bold hover:bg-primaryHover transition-colors shadow-md"><i class="fa-solid fa-users mr-1.5"></i> Dashboard Belajar</a>
                 `;
                 
-                // Cek hak akses modul ini ke database
-                checkEnrollmentStatus(session.email);
+                // Mulai Proses Verifikasi Strict ke Server
+                verifyEnrollmentStrict(session.email);
             } else {
                 localStorage.removeItem('neokademi_user');
                 session = null;
